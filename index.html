@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Food Icons</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #f0f2f5;
+      color: #333;
+      min-height: 100vh;
+    }
+
+    header {
+      background: #fff;
+      border-bottom: 1px solid #e0e0e0;
+      padding: 24px 0;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+
+    .header-inner {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    h1 {
+      font-size: 24px;
+      font-weight: 700;
+    }
+
+    .search-box {
+      position: relative;
+      width: 300px;
+    }
+
+    .search-box input {
+      width: 100%;
+      padding: 10px 16px 10px 40px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .search-box input:focus {
+      border-color: #4a90d9;
+    }
+
+    .search-box svg {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #999;
+    }
+
+    .count {
+      font-size: 14px;
+      color: #888;
+    }
+
+    .grid {
+      max-width: 1280px;
+      margin: 32px auto;
+      padding: 0 24px;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 20px;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 20px 16px 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+
+    .card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 16px rgba(0,0,0,0.1);
+    }
+
+    .card img {
+      width: 80px;
+      height: 80px;
+      object-fit: contain;
+    }
+
+    .card .name {
+      font-size: 14px;
+      font-weight: 500;
+      text-align: center;
+      text-transform: capitalize;
+    }
+
+    .card .btn-download {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      font-size: 13px;
+      font-weight: 500;
+      color: #fff;
+      background: #4a90d9;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.2s;
+      text-decoration: none;
+    }
+
+    .card .btn-download:hover {
+      background: #357abd;
+    }
+
+    .no-results {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 60px 20px;
+      color: #999;
+      font-size: 16px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-inner">
+      <h1>Food Icons</h1>
+      <div class="search-box">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" id="search" placeholder="Search icons...">
+      </div>
+      <span class="count" id="count"></span>
+    </div>
+  </header>
+
+  <div class="grid" id="grid"></div>
+
+  <script>
+    const icons = [
+      "almond","apple","artichoke","asparagus","avocado","bacon","banana","basil",
+      "bay-leaf","beef","beet","bell-pepper","black-beans","blueberry","bok-choy",
+      "bread","broccoli","brussels-sprouts","butter","cabbage","cardamom","carrot",
+      "cashew","cauliflower","cayenne","celery","cheddar","cheese","cherry","chicken",
+      "chickpeas","chili","chocolate","cilantro","cinnamon","clove","cocoa","coconut-oil",
+      "coconut","corn","cornstarch","couscous","crab","cranberry","cream","cucumber",
+      "cumin","curry-powder","dill","duck","egg","eggplant","feta","flour","garlic",
+      "ginger","grape","green-beans","ham","honey","jalapeno","kale","ketchup","kiwi",
+      "lamb","leek","lemon","lentils","lettuce","lime","lobster","mango","maple-syrup",
+      "mayonnaise","milk","mint","mozzarella","mushroom","mustard","noodles","nutmeg",
+      "oats","olive-oil","onion","orange","oregano","paprika","parmesan","parsley",
+      "pasta","peach","peanut-butter","peanut","pear","peas","pecan","pepper",
+      "pineapple","pistachio","pork","potato","quinoa","radish","raspberry","rice",
+      "ricotta","rosemary","sage","salmon","salt","sausage","scallion","sesame-oil",
+      "sesame-seeds","shrimp","sour-cream","soy-sauce","spinach","strawberry","sugar",
+      "sweet-potato","tahini","thyme","tofu","tomato","tortilla","tuna","turkey",
+      "turmeric","vanilla","vinegar","walnut","watermelon","yogurt","zucchini"
+    ];
+
+    const grid = document.getElementById("grid");
+    const searchInput = document.getElementById("search");
+    const countEl = document.getElementById("count");
+
+    function formatName(name) {
+      return name.replace(/-/g, " ");
+    }
+
+    function render(filter = "") {
+      const filtered = icons.filter(name =>
+        name.replace(/-/g, " ").includes(filter.toLowerCase())
+      );
+
+      countEl.textContent = `${filtered.length} icon${filtered.length !== 1 ? "s" : ""}`;
+
+      if (filtered.length === 0) {
+        grid.innerHTML = '<div class="no-results">No icons found</div>';
+        return;
+      }
+
+      grid.innerHTML = filtered.map(name => `
+        <div class="card">
+          <img src="icons/${name}.png" alt="${formatName(name)}" loading="lazy">
+          <span class="name">${formatName(name)}</span>
+          <button class="btn-download" onclick="downloadIcon('${name}')">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Download
+          </button>
+        </div>
+      `).join("");
+    }
+
+    function downloadIcon(name) {
+      fetch(`icons/${name}.png`)
+        .then(res => res.blob())
+        .then(blob => {
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = `${name}.png`;
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          URL.revokeObjectURL(url);
+        });
+    }
+
+    searchInput.addEventListener("input", (e) => render(e.target.value));
+    render();
+  </script>
+</body>
+</html>
